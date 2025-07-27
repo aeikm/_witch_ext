@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Twitch Ad Muter",
+  "version": "1.3.25.7271318",
+  "description": "Mute Twitch video ads and automatically clicks the bonus channel points button while you're watching a stream.",
+  "permissions": ["scripting"],
+  "host_permissions": ["https://www.twitch.tv/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.twitch.tv/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
