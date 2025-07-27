@@ -10,7 +10,20 @@ function isAdPlaying() {
   return isAdPlaying;
 }
 
-function muteVideoPlayer(mute = true) {
+function unmuteVideoPlayer() {
+  const videos = document.querySelectorAll('video');
+  videos.forEach((video, idx) => {
+    if (!video) return;
+
+    // 各 video 要素の広告検出条件
+    const isAd = video.src.includes('ads') ||
+      video.dataset.adMetadata !== undefined ||
+      document.querySelector('.ad-banner') !== null;
+
+    if (isAd) return;
+    video.muted = false;
+    console.log(`[Twitch Ad Muter] video[${idx}] 広告でないビデオ検出 → ミュート解除`);//[0-1]どちらも解除ログあり　しかし広告のみミュートになってた
+  });
 }
 
 setInterval(() => {
@@ -22,9 +35,10 @@ setInterval(() => {
   if (!video) return false;
   const adDetected = isAdPlaying();
   if (adDetected && !lastAdState) {
-//    muteVideoPlayer(true);
+    unmuteVideoPlayer();
     video.muted = true;
-    video.playbackRate = 1.6;//3倍は体感相当早いんだけど+10とかしたときと同じで読み込み時間で実質変わらないかむしろ遅い
+    video.playbackRate = 1.1;//3倍は体感相当早いんだけど+10とかしたときと同じで読み込み時間で実質変わらないかむしろ遅い
+//    video.currentTime += 199;//データの送受信が指定時間分不要になってそうだけど、広告の時間ぴったりの指定ができないし、画面が動かなくて退屈
     console.log("[Twitch Ad Muter] 広告検出 → ミュート");
   } else if (!adDetected && lastAdState) {
 //    muteVideoPlayer(false);
